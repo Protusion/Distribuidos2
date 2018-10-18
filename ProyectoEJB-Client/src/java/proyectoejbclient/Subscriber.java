@@ -34,6 +34,8 @@ public class Subscriber {
             ok = cliente.inicializaCliente();
             tsubscriber = cliente.tsession.createSubscriber(cliente.t);
             while (ok) {
+                //tsubscriber.setMessageListener(listener);
+                cliente.tconnection.start();
                 tsubscriber.setMessageListener(listener);
 
             }

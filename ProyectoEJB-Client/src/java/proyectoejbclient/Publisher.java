@@ -25,13 +25,13 @@ public class Publisher {
             ok = cliente.inicializaCliente();
             tpublisher = cliente.tsession.createPublisher(cliente.t);
             
-            if(ok){
+            while(ok){
                 String cadena = sc.nextLine();
                 message = cliente.tsession.createTextMessage();
                 message.setText(cadena);
                 cliente.tconnection.start();
                 tpublisher.publish(message);
-                cliente.tconnection.close();
+                //cliente.tconnection.close();
             }
         }catch(JMSException e){
             System.out.println(e);
