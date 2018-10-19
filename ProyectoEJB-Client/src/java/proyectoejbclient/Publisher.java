@@ -9,32 +9,31 @@ import java.util.Scanner;
 import javax.jms.*;
 /**
  *
- * @author Alberto
+ * @author usuario
  */
 public class Publisher {
     
         
     public static void main(String[] args){
-        ClienteRemoto cliente;
-        boolean ok;
-        TopicPublisher tpublisher;
-        TextMessage message;
-        Scanner sc = new Scanner(System.in);
+        ClienteRemoto cliente; // Creamos la conexion mediante ClienteRemoto
+        boolean ok; // Comprobación retorno
+        TopicPublisher tpublisher; // Creamos al publisher
+        TextMessage message; // Creamos el mensaje
+        Scanner sc = new Scanner(System.in); // Creamos una variable de tipo scanner para poder
+        // leer por pantalla los mensajes que publica el cliente Remoto
         try{
-            cliente = new ClienteRemoto();
-            ok = cliente.inicializaCliente();
-            tpublisher = cliente.tsession.createPublisher(cliente.t);
+            cliente = new ClienteRemoto(); // Crea objeto de la clase ClienteRemoto
+            ok = cliente.inicializaCliente(); // Inicializa parametros
+            tpublisher = cliente.tsession.createPublisher(cliente.t); // Preparamos al publisher
             
-            while(ok){
-                String cadena = sc.nextLine();
-                message = cliente.tsession.createTextMessage();
-                message.setText(cadena);
-                cliente.tconnection.start();
-                tpublisher.publish(message);
-                //cliente.tconnection.close();
+            while(ok){ // Bucle infinito para que pueda publicar tantas veces como quiera
+                String cadena = sc.nextLine(); // Mensaje que lee por pantalla
+                message = cliente.tsession.createTextMessage(); // Inicializamos la clase TextMessage
+                message.setText(cadena); // Le introducimos el mensaje obtenido por pantalla 
+                tpublisher.publish(message); // Envia el mensaje
             }
         }catch(JMSException e){
-            System.out.println(e);
+            System.out.println(e); // Tratamiento de excepciones
         }
     }
     
