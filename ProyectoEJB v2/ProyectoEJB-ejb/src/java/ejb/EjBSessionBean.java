@@ -22,66 +22,66 @@ import javax.jms.*;
 @Singleton
 public class EjBSessionBean implements EjBSessionBeanLocal {
 
-    @Resource(mappedName = "jms/FactoriaConexiones")
-    public TopicConnectionFactory tcf;
-    @Resource(mappedName = "jms/Noticias")
-    public Topic t;
-    public TopicPublisher publisher;
-    public TopicConnection top;
-    public TopicSession session;
-    public int count_msg = 0;
-    public LinkedList<String> list_msg = new LinkedList<String>();
-    public TextMessage mm;
+    @Resource(mappedName = "jms/FactoriaConexiones") //direccion de la cola Factoria de Conexiones.
+    public TopicConnectionFactory tcf; // factoria de conexiones de topics.
+    @Resource(mappedName = "jms/Noticias") //direccion de la cola Noticia. 
+    public Topic t; // topic de noticias.
+    public TopicPublisher publisher; // publiser que publicará las noticias.
+    public TopicConnection top; // conexion del topic noticia.
+    public TopicSession session; // sesion del topic noticia.
+    
+    public int count_msg = 0; // contador de mensajes.
+    public LinkedList<String> list_msg = new LinkedList<String>(); // lista para guardar los mensajes. 
+    public TextMessage mm; // mensaje tipo TextMessage que enviará el publisher
 
     @PostConstruct
     void inicializacion() {
         try {
-            String cadena;
-            FileReader f = new FileReader("mensajes.txt");
-            BufferedReader b = new BufferedReader(f);
-            while ((cadena = b.readLine()) != null) {
-                list_msg.add(cadena);
-                count_msg++;
+            String cadena; // Cadena que almacena cada linea de texto
+            FileReader f = new FileReader("mensajes.txt");  // Cargamos el fichero
+            BufferedReader b = new BufferedReader(f); // Enlazamos el fichero con el buffer
+            while ((cadena = b.readLine()) != null) { // Leemos una línea y comprobamos que no esta vacía
+                list_msg.add(cadena);  // Guardamos la línea en la lista de mensajes
+                count_msg++; // Aumentamos el contador
             }
-            b.close();
-        } catch (FileNotFoundException e) {
+            b.close(); // Cerramos el fichero
+        } catch (FileNotFoundException e) { // Control de excepciones
             System.out.println(e);
         } catch (IOException ex) {
             System.out.println(ex);
         }
-
     }
 
     @Override
     public void addMsg(String m) {
         try {
-            top = tcf.createTopicConnection();
-            session = top.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
-            publisher = session.createPublisher(t);
-            mm = session.createTextMessage(m);
-            top.start();
-            publisher.publish(mm);
-            top.close();
+            top = tcf.createTopicConnection(); // Creamos la conexion
+            session = top.createTopicSession(false, Session.AUTO_ACKNOWLEDGE); // Creamos la sesión
+            publisher = session.createPublisher(t); // Creamos el publisher
+            mm = session.createTextMessage(m); // Creamos el TextMessage a partir del String pasado por parámetro
+            top.start(); // Iniciamos la conexion 
+            publisher.publish(mm); // El publisher envia el mensaje
+            top.close(); // Cerramos la conexión 
         } catch (JMSException ex) {
-            System.out.println(ex);
+            System.out.println(ex); // Control de excepciones
         }
 
     }
 
     @Override
     public int getNumber() {
-        return count_msg;
+        return count_msg; // Devolvemos el contador de mensajes
     }
 
     @Override
     public LinkedList<String> getList() {
-        return list_msg;
+        return list_msg; // Devolvemos la lista de mensajes
     }
 
     @Override
     public void addToList(String m) {
-        list_msg.add(m);
-        count_msg++;
+        list_msg.add(m); //Introducimos un nuevo mensaje a la lista
+        count_msg++; // Aumentamos el contador de mensajes
     }
 
 }

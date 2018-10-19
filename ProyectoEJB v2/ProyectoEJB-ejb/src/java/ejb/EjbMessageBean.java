@@ -32,36 +32,36 @@ import javax.jms.MessageListener;
 public class EjbMessageBean implements MessageListener {
 
     @EJB
-    private EjBSessionBeanLocal ejBSessionBean;
+    private EjBSessionBeanLocal ejBSessionBean; // Acceso a EjBSessionBean
 
     public EjbMessageBean() {
     }
 
     @Override
     public void onMessage(Message message) {
-        String cadena = null;
+        String cadena = null; // Instanciamos un string para guardar el mensaje
         try {
-            cadena = message.getBody(String.class);
-            cadena = cadena + "\n";
+            cadena = message.getBody(String.class); // Obtenemos el texto del mensaje y lo metemos en el String cadena
+            cadena = (ejBSessionBean.getNumber() +1) + " " +cadena + "\n"; // Damos formato al mensaje
         } catch (JMSException ex) {
-            System.out.println(ex);
+            System.out.println(ex); // Tratamiento de excepciones
         }
         try {
-            File file = new File("mensajes.txt");
-            BufferedWriter writer;
-            if (!file.exists()) {
-                 writer = new BufferedWriter(new FileWriter("mensajes.txt"));
-                writer.write(cadena);
-            }else{
-                writer = new BufferedWriter(new FileWriter("mensajes.txt",true));
-                writer.append(cadena);
+            File file = new File("mensajes.txt");  // Cargamos el fichero
+            BufferedWriter writer; // Creamos el buffer de escritura
+            if (!file.exists()) { // Comprobamos que el fichero existe, si no existe entonces:
+                writer = new BufferedWriter(new FileWriter("mensajes.txt")); // Creamos el fichero mensajes.txt
+                writer.write(cadena); // Escribimos el mensaje
+            }else{ // Si existe: 
+                writer = new BufferedWriter(new FileWriter("mensajes.txt",true)); // Abrimos el fichero en modo append
+                writer.append(cadena); // Añadimos el nuevo mensaje
             }
-            writer.close();
+            writer.close(); // Cerramos el fichero
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Tratamiento de excepciones
         }
 
-        ejBSessionBean.addToList(cadena);
+        ejBSessionBean.addToList(cadena); // Añadimos el mensaje a la lista de mensajes que implementa EjBSessionBean
 
     }
 }
