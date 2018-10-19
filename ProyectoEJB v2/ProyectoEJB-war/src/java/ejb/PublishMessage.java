@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 public class PublishMessage extends HttpServlet {
 
     @EJB
-    private EjBSessionBeanLocal ejBSessionBean;
+    private EjBSessionBeanLocal ejBSessionBean; // Inyección de código para acceder a EjBSessionBean
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,9 +36,12 @@ public class PublishMessage extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String m = request.getParameter("MESSAGE");
+        
+        
+        String m = request.getParameter("MESSAGE"); // Convertimos el mensaje a tipo string
         if (m != null) {
-            ejBSessionBean.addMsg(m);
+            ejBSessionBean.addMsg(m); // Llamamos addMsg para añadir el mensajes 
+                                      //proporcionado por el boton de "submit"
         }
 
         try (PrintWriter out = response.getWriter()) {
@@ -50,12 +53,12 @@ public class PublishMessage extends HttpServlet {
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet PublishMessage at " + request.getContextPath() + "</h1>");
-            out.println("<form>");
-            out.println("NOTICIA: <input type='text' name='MESSAGE'><br/>");
-            out.println("<input type='submit' value='Submit'><br/>");
-            out.println("<br><br><br>");
-            out.println("<a href='EjBServer'> Volver a pagina anterior</a>");
-            out.println("</form>");
+            out.println("<form>"); // Nuevo formulario
+            out.println("NOTICIA: <input type='text' name='MESSAGE'><br/>"); // TextBox para introducir el mensaje
+            out.println("<input type='submit' value='Submit'><br/>"); // Botón de "submit" para enviar el mensaje
+            out.println("<br><br><br>"); // 3 saltos de línea
+            out.println("<a href='EjBServer'> Volver a pagina anterior</a>");  // Referencia para volver a la pagina principal
+            out.println("</form>"); // Fin del formulario
             out.println("</body>");
             out.println("</html>");
         }

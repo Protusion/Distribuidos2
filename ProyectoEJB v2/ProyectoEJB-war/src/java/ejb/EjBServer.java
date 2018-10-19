@@ -38,7 +38,6 @@ public class EjBServer extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -46,17 +45,17 @@ public class EjBServer extends HttpServlet {
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet EjBServer at " + request.getContextPath() + "</h1>");
-            out.println("<a href='PublishMessage'> Publicar noticia</a>");
-            out.println("<br><br>");
-            LinkedList<String> lista = ejBSessionBean.getList();
-            if (lista != null) {
-                for (int i = 0; i < lista.size(); i++) {
-                    out.println("" + lista.get(i));
-                    out.println("<br>");
+            out.println("<a href='PublishMessage'> Publicar noticia</a>"); // Enlace a al servlet PublishMessage
+            out.println("<br><br>"); // 2 saltos de línea
+            LinkedList<String> lista = ejBSessionBean.getList(); // Obtenemos el histórico de noticias
+            if (lista != null) { // Si no esta vacía, 
+                for (int i = 0; i < lista.size(); i++) { // iteramos sobre la lista,
+                    out.println("" + lista.get(i)); // Imprimimos la noticia
+                    out.println("<br>"); // salto de línea
                 }
             }
-            out.println("<br>");
-            out.println("" + ejBSessionBean.getNumber());
+            out.println("<br>"); // salto de línea
+            out.println("" + ejBSessionBean.getNumber()); // Imprimimos el número total de noticias
             out.println("</body>");
             out.println("</html>");
         }
